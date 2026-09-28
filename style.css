@@ -1,0 +1,735 @@
+/* ==========================================================================
+   TASKFLOW - SIMPLE, CUTE, CLEAN & PROFESSIONAL TO-DO APP
+   Exact Palette: Sage Green (#6F8F72), Warm Cream (#F6F4EC), Soft Coral (#D98B73)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS Variables & Theme Definition
+   -------------------------------------------------------------------------- */
+:root {
+    --bg-page: #F6F4EC;            /* Warm Cream / Off-White */
+    --bg-card: #FFFFFF;            /* Pure White */
+    --bg-subtle: #EDEADF;          /* Soft Cream Highlight */
+
+    --primary-sage: #6F8F72;        /* Sage Green */
+    --primary-sage-hover: #5D7B60;  /* Sage Green Hover */
+    --primary-sage-light: #EBF2EC;  /* Soft Sage Light */
+
+    --accent-coral: #D98B73;        /* Soft Coral */
+    --accent-coral-hover: #C2765E;
+    --accent-coral-light: #FBF0EC;
+
+    --text-dark: #26332A;          /* Dark Charcoal Text */
+    --text-muted: #707970;         /* Muted Gray Text */
+    --text-completed: #95A397;     /* Muted Sage for Completed items */
+
+    --border-color: #E2E0D6;       /* Light Beige Border */
+
+    /* Typography & Radius */
+    --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-full: 9999px;
+
+    --shadow-soft: 0 6px 20px -2px rgba(38, 51, 42, 0.05), 0 2px 6px -1px rgba(38, 51, 42, 0.03);
+    --shadow-modal: 0 16px 32px -6px rgba(38, 51, 42, 0.12);
+
+    --transition-fast: 0.18s ease;
+    --transition-normal: 0.25s ease;
+}
+
+/* --------------------------------------------------------------------------
+   2. Global Reset
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    min-height: 100%;
+    width: 100%;
+    font-family: var(--font-main);
+    background-color: var(--bg-page);
+    color: var(--text-dark);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    border: none;
+    outline: none;
+}
+
+button {
+    cursor: pointer;
+    background: none;
+}
+
+:focus-visible {
+    outline: 2px solid var(--primary-sage);
+    outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   3. Main App Layout & Centered Card
+   -------------------------------------------------------------------------- */
+.app-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px 60px 20px;
+    min-height: 100vh;
+}
+
+.app-card {
+    background-color: var(--bg-card);
+    width: 100%;
+    max-width: 680px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-soft);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* --------------------------------------------------------------------------
+   4. Top Header & Compact Focus Timer
+   -------------------------------------------------------------------------- */
+.top-header-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.app-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    letter-spacing: -0.02em;
+}
+
+.app-subtitle {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Compact Timer Card at Top */
+.compact-timer {
+    background-color: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    min-width: 190px;
+}
+
+.timer-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.timer-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.timer-display {
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    color: var(--primary-sage);
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+.timer-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.timer-status {
+    font-size: 0.78rem;
+    color: var(--primary-sage);
+    font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   5. Add Task Section
+   -------------------------------------------------------------------------- */
+.add-task-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: var(--bg-page);
+    padding: 18px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+#addTaskForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-group-title input {
+    width: 100%;
+    padding: 11px 15px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.94rem;
+    color: var(--text-dark);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input-group-title input:focus {
+    border-color: var(--primary-sage);
+    box-shadow: 0 0 0 3px rgba(111, 143, 114, 0.15);
+}
+
+.input-group-title input::placeholder {
+    color: var(--text-muted);
+}
+
+.input-group-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.input-group-meta input[type="date"],
+.input-group-meta input[type="time"] {
+    flex: 1;
+    padding: 9px 12px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    transition: border-color var(--transition-fast);
+}
+
+.input-group-meta input[type="date"]:focus,
+.input-group-meta input[type="time"]:focus {
+    border-color: var(--primary-sage);
+}
+
+.validation-msg {
+    font-size: 0.83rem;
+    color: var(--accent-coral);
+    background-color: var(--accent-coral-light);
+    border: 1px solid rgba(217, 139, 115, 0.3);
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   6. Buttons
+   -------------------------------------------------------------------------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: var(--radius-md);
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.78rem;
+    border-radius: var(--radius-sm);
+}
+
+.btn-sage {
+    background-color: var(--primary-sage);
+    color: #ffffff;
+}
+
+.btn-sage:hover {
+    background-color: var(--primary-sage-hover);
+}
+
+.btn-coral {
+    background-color: var(--accent-coral);
+    color: #ffffff;
+}
+
+.btn-coral:hover {
+    background-color: var(--accent-coral-hover);
+}
+
+.btn-secondary {
+    background-color: var(--bg-subtle);
+    color: var(--text-dark);
+}
+
+.btn-secondary:hover {
+    background-color: #dedacb;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+
+.btn-outline:hover {
+    background-color: var(--bg-page);
+    color: var(--text-dark);
+}
+
+/* --------------------------------------------------------------------------
+   7. Toolbar Section (Stats & Filters)
+   -------------------------------------------------------------------------- */
+.toolbar-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.task-stats {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.task-stats strong {
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+.stat-divider {
+    color: var(--border-color);
+}
+
+.filter-pills {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background-color: var(--bg-page);
+    padding: 4px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+}
+
+.filter-btn {
+    padding: 4px 14px;
+    border-radius: var(--radius-full);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
+}
+
+.filter-btn:hover {
+    color: var(--text-dark);
+}
+
+.filter-btn.active {
+    background-color: var(--primary-sage);
+    color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   8. Task List & Items
+   -------------------------------------------------------------------------- */
+.task-list-section {
+    min-height: 140px;
+}
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-item {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 13px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.task-item:hover {
+    border-color: #d1cdbf;
+}
+
+.task-item.completed {
+    background-color: var(--bg-page);
+}
+
+.task-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Custom Checkbox */
+.task-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-sage);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    flex-shrink: 0;
+    transition: all var(--transition-fast);
+}
+
+.task-checkbox:checked {
+    background-color: var(--primary-sage);
+    border-color: var(--primary-sage);
+}
+
+.task-checkbox:checked::after {
+    content: '';
+    width: 5px;
+    height: 9px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-bottom: 2px;
+}
+
+.task-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.task-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    word-break: break-word;
+    transition: color var(--transition-fast);
+}
+
+.task-item.completed .task-title {
+    text-decoration: line-through;
+    color: var(--text-completed);
+}
+
+.task-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.badge-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.badge-today { background-color: var(--primary-sage-light); color: var(--primary-sage); }
+.badge-tomorrow { background-color: #E8EEFA; color: #4361EE; }
+.badge-upcoming { background-color: var(--bg-subtle); color: var(--text-muted); }
+.badge-overdue { background-color: var(--accent-coral-light); color: var(--accent-coral); }
+
+.task-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-btn {
+    padding: 5px 9px;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
+}
+
+.action-btn:hover {
+    background-color: var(--bg-page);
+    color: var(--text-dark);
+}
+
+.action-btn.delete:hover {
+    background-color: var(--accent-coral-light);
+    color: var(--accent-coral);
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 20px;
+    text-align: center;
+    background-color: var(--bg-page);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.empty-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.empty-subtext {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   9. Modals (Edit & Delete)
+   -------------------------------------------------------------------------- */
+.modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(38, 51, 42, 0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.modal-backdrop.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 440px;
+    box-shadow: var(--shadow-modal);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transform: translateY(12px);
+    transition: transform var(--transition-normal);
+}
+
+.modal-backdrop.show .modal-card {
+    transform: translateY(0);
+}
+
+.modal-small {
+    max-width: 360px;
+    text-align: center;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.modal-close-btn {
+    font-size: 1.4rem;
+    color: var(--text-muted);
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+}
+
+.modal-close-btn:hover {
+    color: var(--text-dark);
+    background-color: var(--bg-page);
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.form-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.form-input {
+    width: 100%;
+    padding: 9px 13px;
+    background-color: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+
+.form-input:focus {
+    border-color: var(--primary-sage);
+}
+
+.form-row {
+    display: flex;
+    gap: 12px;
+}
+
+.col-6 {
+    flex: 1;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.confirm-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 8px 0;
+}
+
+/* --------------------------------------------------------------------------
+   10. Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+    .app-wrapper {
+        padding: 16px 12px 32px 12px;
+    }
+
+    .app-card {
+        padding: 20px 16px;
+        gap: 20px;
+        border-radius: var(--radius-md);
+    }
+
+    .top-header-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        padding-bottom: 16px;
+    }
+
+    .header-brand {
+        text-align: center;
+    }
+
+    .compact-timer {
+        width: 100%;
+        align-items: center;
+        padding: 12px;
+    }
+
+    .input-group-meta {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .input-group-meta input[type="date"],
+    .input-group-meta input[type="time"],
+    .btn-sage {
+        width: 100%;
+    }
+
+    .toolbar-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .filter-pills {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .filter-btn {
+        flex: 1;
+        text-align: center;
+    }
+
+    .task-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .task-right {
+        justify-content: flex-end;
+        border-top: 1px solid var(--border-color);
+        padding-top: 8px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
