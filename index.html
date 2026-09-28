@@ -23,7 +23,7 @@
                         <span class="timer-display" id="timerDisplay">25:00</span>
                     </div>
                     <div class="timer-controls">
-                        <button type="button" class="btn btn-sage btn-sm" id="startTimerBtn">Start</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="startTimerBtn">Start</button>
                         <button type="button" class="btn btn-secondary btn-sm" id="pauseTimerBtn" style="display: none;">Pause</button>
                         <button type="button" class="btn btn-outline btn-sm" id="resetTimerBtn">Reset</button>
                     </div>
@@ -40,7 +40,7 @@
                     <div class="input-group-meta">
                         <input type="date" id="taskDateInput" aria-label="Task date">
                         <input type="time" id="taskTimeInput" aria-label="Task time">
-                        <button type="submit" class="btn btn-sage" id="addTaskBtn">Add Task</button>
+                        <button type="submit" class="btn btn-primary" id="addTaskBtn">Add Task</button>
                     </div>
                 </form>
                 <div class="validation-msg" id="validationMsg" style="display: none;">
@@ -69,6 +69,18 @@
                     <!-- Rendered tasks or Empty state -->
                 </div>
             </section>
+
+            <!-- Theme Switcher Section (Matches design screenshot) -->
+            <footer class="theme-switcher-section">
+                <div class="theme-dots" role="radiogroup" aria-label="Theme selector">
+                    <button type="button" class="theme-dot active" data-theme-select="pink" title="Pink Theme" aria-label="Pink Theme" style="--dot-color: #be4896;"></button>
+                    <button type="button" class="theme-dot" data-theme-select="purple" title="Purple Theme" aria-label="Purple Theme" style="--dot-color: #8b5cf6;"></button>
+                    <button type="button" class="theme-dot" data-theme-select="blue" title="Blue Theme" aria-label="Blue Theme" style="--dot-color: #3b82f6;"></button>
+                    <button type="button" class="theme-dot" data-theme-select="sage" title="Sage Theme" aria-label="Sage Theme" style="--dot-color: #6f8f72;"></button>
+                    <button type="button" class="theme-dot" data-theme-select="peach" title="Peach Theme" aria-label="Peach Theme" style="--dot-color: #e07a5f;"></button>
+                </div>
+                <span class="theme-label" id="currentThemeName">Pink Theme</span>
+            </footer>
         </div>
     </main>
 
@@ -99,7 +111,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline" id="cancelEditBtn">Cancel</button>
-                    <button type="submit" class="btn btn-sage" id="saveEditBtn">Save Changes</button>
+                    <button type="submit" class="btn btn-primary" id="saveEditBtn">Save Changes</button>
                 </div>
             </form>
         </div>

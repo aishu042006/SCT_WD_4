@@ -8,11 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. CONSTANTS & STATE
     // ----------------------------------------------------------------------
     const STORAGE_KEY = 'taskflow_tasks';
+    const THEME_STORAGE_KEY = 'taskflow_theme';
 
     let tasks = [];
     let activeFilter = 'all';
     let editingTaskId = null;
     let deletingTaskId = null;
+
+    const themeNames = {
+        pink: 'Pink Theme',
+        purple: 'Purple Theme',
+        blue: 'Blue Theme',
+        sage: 'Sage Theme',
+        peach: 'Peach Theme'
+    };
 
     // Focus Timer State (25 Minutes)
     let timerState = {
@@ -24,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------------------------------------------------
     // 2. DOM ELEMENTS
     // ----------------------------------------------------------------------
+    // Theme Elements
+    const themeDots = document.querySelectorAll('.theme-dot');
+    const currentThemeName = document.getElementById('currentThemeName');
+
     // Add Task Form Elements
     const addTaskForm = document.getElementById('addTaskForm');
     const taskTitleInput = document.getElementById('taskTitleInput');
@@ -64,10 +77,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. INITIALIZATION & PERSISTENCE
     // ----------------------------------------------------------------------
     function init() {
+        loadTheme();
         loadTasks();
         setDefaultInputs();
         setupEventListeners();
         renderTasks();
+    }
+
+    function loadTheme() {
+        const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'pink';
+        setTheme(savedTheme);
+    }
+
+    function setTheme(themeKey) {
+        if (!themeNames[themeKey]) themeKey = 'pink';
+        document.documentElement.setAttribute('data-theme', themeKey);
+        localStorage.setItem(THEME_STORAGE_KEY, themeKey);
+
+        themeDots.forEach(dot => {
+            const isMatch = dot.getAttribute('data-theme-select') === themeKey;
+            dot.classList.toggle('active', isMatch);
+        });
+
+        if (currentThemeName) {
+            currentThemeName.textContent = themeNames[themeKey];
+        }
     }
 
     function loadTasks() {
@@ -107,6 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. EVENT LISTENERS
     // ----------------------------------------------------------------------
     function setupEventListeners() {
+        // Theme Dots Click Listener
+        themeDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const selectedTheme = dot.getAttribute('data-theme-select');
+                setTheme(selectedTheme);
+            });
+        });
+
         // Add Task Form Submit
         addTaskForm.addEventListener('submit', (e) => {
             e.preventDefault();
